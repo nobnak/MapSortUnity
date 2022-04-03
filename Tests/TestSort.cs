@@ -12,8 +12,8 @@ public class TestSort {
     public void TestSortSimplePasses() {
         var p = System.Environment.ProcessorCount;
         var rand = new Unity.Mathematics.Random(31);
-        System.Func<int, int, int> comp = (i, j) => (i < j) ? -1 : 1;
-        var comp1 = new FuncComaparer<int>(comp);
+        System.Func<int, int, int> comp0 = (i, j) => (i < j) ? -1 : 1;
+        var comp = new FuncComaparer<int>(comp0);
 
         var src = Enumerable.Range(0, p).Select(v => rand.NextInt()).ToArray();
         var dst = new int[src.Length];
@@ -27,22 +27,23 @@ public class TestSort {
         src = Enumerable.Range(0, n).Select(v => rand.NextInt()).ToArray();
         dst = new int[src.Length];
         src.Sort(dst, comp, p, 1);
-        System.Array.Sort(src, comp1);
+        System.Array.Sort(src, comp);
         Assert.IsTrue(src.SequenceEqual(dst));
 
         Measure.Method(() => {
-            src.Sort(dst, comp, 1, 1);
+            src.Sort(dst, comp, 1);
         }).SampleGroup("Sequential Sort")
-            .MeasurementCount(10)
-            .Run();
+        .MeasurementCount(10)
+        //.ProfilerMarkers(MapSortExtension.SAMPLES.Select(v => new SampleGroup(v, SampleUnit.Millisecond)).ToArray())
+        .Run();
         Measure.Method(() => {
             src.Sort(dst, comp, p);
         }).SampleGroup($"Parallel Sort: p={p}")
-            .MeasurementCount(10).Run();
+        .MeasurementCount(10).Run();
 
-        Measure.Method(() => {
-            System.Array.Sort(src, comp1);
-        }).SampleGroup(".net Sort")
+        Measure.Method((System.Action)(() => {
+            System.Array.Sort(src, (System.Collections.Generic.IComparer<int>)comp);
+        })).SampleGroup(".net Sort")
         .MeasurementCount(10)
         .Run();
     }
