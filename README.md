@@ -1,6 +1,4 @@
-# MapSortUnity
-
-An implementation of (Parallel) sort algorithm Map Sort on Unity.
+# An implementation of (Parallel) Map Sort for Unity
 
 ```csharp
 using Unity.Mathematics;
