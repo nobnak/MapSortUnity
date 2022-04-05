@@ -8,7 +8,8 @@ using System.Linq;
 
 var p = System.Environment.ProcessorCount;
 var rand = new Unity.Mathematics.Random(31);
-System.Func<int, int, int> comp = (i, j) => (i < j) ? -1 : 1;
+System.Func<int, int, int> comp0 = (i, j) => (i < j) ? -1 : 1;
+var comp = new FuncComaparer<int>(comp0);
 
 var src = Enumerable.Range(0, p).Select(v => rand.NextInt()).ToArray();
 var dst = new int[src.Length];
