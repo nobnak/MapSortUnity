@@ -1,3 +1,4 @@
+using Gist2.Math;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,12 +34,12 @@ namespace MapSort {
             var keys = new T[m - 1];
             if (keys.Length > 0) {
                 var rand = Unity.Mathematics.Random.CreateFromIndex(incrementalSeed++);
-                var keyCandits = new T[math.min(m * 10, src.Length)];
+                var keyCandits = new T[math.min(m * 100, src.Length / 1000)];
                 for (var i = 0; i < keyCandits.Length - 1; i++)
                     keyCandits[i] = src[rand.NextInt(0, src.Length)];
                 System.Array.Sort(keyCandits, compare);
                 var di = (float)(keyCandits.Length - 1) / keys.Length;
-                for (var i = 0; i < keys.Length - 1; i++)
+                for (var i = 0; i < keys.Length; i++)
                     keys[i] = keyCandits[(int)math.round(di * (i + 0.5f))];
                 System.Array.Sort(keys, compare);
             }
